@@ -7,6 +7,7 @@ tokenizer = AutoTokenizer.from_pretrained(
     bos_token='[BOS]', eos_token='[EOS]', unk_token='[UNK]', pad_token='[PAD]', mask_token='[MASK]'
     )
 
+@st.cache()
 def decomposition(sentence):
     input_idx = tokenizer.encode(sentence)
     output = []
@@ -14,6 +15,7 @@ def decomposition(sentence):
         out = tokenizer.decode(i)
         output.append(out)
     return output
+
 
 st.title('데이터 생성기')
 
