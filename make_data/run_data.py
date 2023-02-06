@@ -1,6 +1,6 @@
 import streamlit as st
 
-from util.sentence_decomp import decomposition
+from make_data.util.sentence_decomp import decomposition
 
 st.title('데이터 생성기')
 
