@@ -2,15 +2,11 @@ import streamlit as st
 
 from transformers import AutoTokenizer
 
-@st.cache()
-def setting():
-    tokenizer = AutoTokenizer.from_pretrained(
-        'kakaobrain/kogpt', revision='KoGPT6B-ryan1.5b-float16',  # or float32 version: revision=KoGPT6B-ryan1.5b
-        bos_token='[BOS]', eos_token='[EOS]', unk_token='[UNK]', pad_token='[PAD]', mask_token='[MASK]'
-        )
-    return tokenizer
 
-tokenizer = setting()
+tokenizer = AutoTokenizer.from_pretrained(
+    'kakaobrain/kogpt', revision='KoGPT6B-ryan1.5b-float16',  # or float32 version: revision=KoGPT6B-ryan1.5b
+    bos_token='[BOS]', eos_token='[EOS]', unk_token='[UNK]', pad_token='[PAD]', mask_token='[MASK]'
+    )
     
 def decomposition(paragraph):
     sentences = paragraph.split('.')
