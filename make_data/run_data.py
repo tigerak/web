@@ -48,7 +48,7 @@ with tab1:
     if not 'wordlist' in st.session_state:
         st.session_state.wordlist = []
     
-    # Prompt the user in the form
+    # 2. Prompt the user in the form
     with st.form(key='paragraph'):
         paragraph = st.text_area(label='문단 입력', value='')
         is_submit = st.form_submit_button('분해 시작')
@@ -61,15 +61,14 @@ with tab1:
     # 4. Display the contents of todolist
     n_col = 6
     for i, sentence in enumerate(st.session_state.wordlist):
-        # with st.expander(label='List of words', expanded=True):
         with st.form(key=f'{i}'):
             field_cols = st.columns([1]*n_col)
             for j, word in enumerate(sentence):
                 with field_cols[j%n_col]:
-                    st.checkbox(label=f'{word}', key=f'{i}_{j}')
+                    st.checkbox(label=f'{word}', key=f'{i}_{j}_{word}')
             if st.form_submit_button('선택 완료'):
-                st.write([k for k, v in st.session_state.items() if v == True])
-
+                st.write([k for k, v in st.session_state.items() 
+                          if (v == True) & (k[0] == str(i))])
 
                 
                 
