@@ -3,6 +3,8 @@ from flask import Flask
 
 app = Flask(__name__)
 from make_data import views
+from make_data.init_db import Base
+
 
 # app.debug = True
 # app.jinja_env.trim_blocks = True
@@ -18,7 +20,7 @@ app.config.update(
 @app.before_first_request
 def beforeFirstRequest():
     print('>> before_first_request !!')
-    init_database()
+    init_database(Base)
 
 # @app.after_request
 # def afterRequest():
