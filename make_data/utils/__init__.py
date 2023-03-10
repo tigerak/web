@@ -1,0 +1,1 @@
+from kogpt import decomposition

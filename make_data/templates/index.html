@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Highlight Text</title>
+    <style>
+        .highlight-yellow { background-color: yellow; }
+        .highlight-green { background-color: lightgreen; }
+        
+        input[type='checkbox'] { position: absolute; left: -3000% }
+        input[type='checkbox'] + label { display : inline-block; background: #CCCCCC; border-radius: 30px;}
+        input[type='checkbox']:before + label {content: ''; }
+        input[type='checkbox']:checked + label {content: ''; background: #FFEB9B;}
+        
+    </style>
+</head>
+<body>
+    <h3>지문을 입력해주세요.</h3>
+    <form action="/" method="post">
+        <p><textarea type="text", name="'paragraph", id="input", cols="50" rows="10"></textarea></p>
+        <p><input type="submit" value="분해"></p>
+    </form>
+    
+    <p>
+        {% for sentence in output_list %}
+            {% set s_k = '0' %}
+            {% for k, word in sentence.items() %}
+                {% set s_k = k.split('_')[0] %}
+                <input type='checkbox', class={{s_k}}, id={{k}}, value={{k}}><label for={{w_k}}, class='word_select'>{{ word }}</label>
+            {% endfor %}
+            <br>
+            <button onclick="setHighlight('highlight-yellow')">노랑색</button>
+            <button onclick="doSave({{s_k}})">노랑 저장</button>
+            <button onclick="setHighlight('highlight-green')">연두색</button>
+            <button onclick="removeHighlight()">하이라이트 제거</button>
+            <button onclick="showHighlighted()">하이라이트 출력</button>
+            <br>
+            <div id="result-container"></div>
+            <div id="result"></div>
+        {% endfor %} 
+    </p>
+
+    <script>
+        function doSave(s_k) {
+            let chk_len = document.getElementById(s_k);
+            let result = [];
+
+            for (let i=0; i<chk_len.length; i++) {
+                if (chk_len[i].checked) {
+                    result.push(chk_len[i].value);
+                }
+            }
+            consol.log(result)
+        }
+
+        function setHighlight(className) {
+            var selection = window.getSelection().getRangeAt(0);
+            var selectedText = selection.extractContents();
+            var span = document.createElement('span');
+            span.className = className;
+            span.appendChild(selectedText);
+            selection.insertNode(span);
+
+            var highlightedWords = document.querySelectorAll("." + className);
+            var words = "";
+            for (var i = 0; i < highlightedWords.length; i++) {
+                words += highlightedWords[i].innerText + ", ";
+            }
+
+            if (className == "highlight-yellow") {
+                document.getElementById("yellow-words").innerText += words;
+            } else if (className == "highlight-green") {
+                document.getElementById("green-words").innerText += words;
+            }
+        }
+
+        function removeHighlight() {
+            var highlighted = document.querySelectorAll('.highlight-yellow, .highlight-green');
+            for (var i = 0; i < highlighted.length; i++) {
+                var parent = highlighted[i].parentNode;
+                while (highlighted[i].firstChild) {
+                    parent.insertBefore(highlighted[i].firstChild, highlighted[i]);
+                }
+                parent.removeChild(highlighted[i]);
+            }
+
+            document.getElementById("yellow-words").innerText = "";
+            document.getElementById("green-words").innerText = "";
+        }
+
+        function showHighlighted() {
+            var yellowWords = document.querySelectorAll('.highlight-yellow');
+            var greenWords = document.querySelectorAll('.highlight-green');
+            
+            var yellowContainer = document.createElement('div');
+            var greenContainer = document.createElement('div');
+            
+            yellowContainer.innerHTML = '<h3>노랑색</h3>';
+            greenContainer.innerHTML = '<h3>연두색</h3>';
+            
+            for (var i = 0; i < yellowWords.length; i++) {
+              yellowContainer.appendChild(yellowWords[i].cloneNode(true));
+            }
+            
+            for (var i = 0; i < greenWords.length; i++) {
+              greenContainer.appendChild(greenWords[i].cloneNode(true));
+            }
+            
+            var resultContainer = document.getElementById('result-container');
+            resultContainer.innerHTML = '선택한 단어 확인';
+            resultContainer.appendChild(yellowContainer);
+            resultContainer.appendChild(greenContainer);
+          }
+    </script>
+
+</body>
+</html>
