@@ -1,5 +1,4 @@
 from make_data.init_db import init_database, db_session
-
 from flask import Flask
 
 app = Flask(__name__)
@@ -10,7 +9,9 @@ from make_data import views
 
 app.config.update(
     SECRET_KEY='abc1234',
-    MAX_CONTENT_LENGTH=1024*1024, # 1mb 이상 파일 업로드 금지
+    SQLALCHEMY_DATABASE_URI = "sqlite+pysqlite:///:memory:",
+    SQLALCHEMY_TRACK_MODIFICATIONS = False,
+    MAX_CONTENT_LENGTH=1024*1024 # 1mb 이상 파일 업로드 금지
     
 )
 
@@ -19,9 +20,9 @@ def beforeFirstRequest():
     print('>> before_first_request !!')
     init_database()
 
-@app.after_request
-def afterRequest():
-    print('>> after_request !!')
+# @app.after_request
+# def afterRequest():
+#     print('>> after_request !!')
     
 @app.teardown_request
 def teardownRequest(exception):

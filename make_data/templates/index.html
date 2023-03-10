@@ -26,7 +26,7 @@
             {% set s_k = '0' %}
             {% for k, word in sentence.items() %}
                 {% set s_k = k.split('_')[0] %}
-                <input type='checkbox', class={{s_k}}, id={{k}}, value={{k}}><label for={{w_k}}, class='word_select'>{{ word }}</label>
+                <input type='checkbox', class={{s_k}}, id={{k}}, value={{k}}><label for={{k}}, class='word_select'>{{ word }}</label>
             {% endfor %}
             <br>
             <button onclick="setHighlight('highlight-yellow')">노랑색</button>

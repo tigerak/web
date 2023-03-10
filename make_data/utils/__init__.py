@@ -1,1 +1,1 @@
-from kogpt import decomposition
+from make_data.utils.kogpt import decomposition
