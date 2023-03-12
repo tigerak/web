@@ -8,21 +8,17 @@ from flask import render_template, request
 @bp.route('/', methods=['GET', 'POST'])
 def decom_but():
     if request.form:
-        if request.form['paragraph']:
-            for _, para in request.form.items():
-                para_input = Para_data(para)
-                db.session.add(para_input)
-                
-                output_list = decomposition(para)
-                m = []
-                for sent in output_list:
-                    for _, v in sent.items():
-                        sent_input = Sent_data(sent=v)
-                        m.append(sent_input)
-                        
-                db.session.add_all(m)
-                db.session.commit()
-                return render_template('index.html', output_list=output_list, m=m)
+        para = request.form['paragraph']
+        para_input = Para_data(para)
+        
+        output_list = decomposition(para)
+        for sent in output_list:
+            for _, v in sent.items():
+                sent_input = Sent_data(sent=v)
+                sent_input.para_data = para_input
+        db.session.add(sent_input)
+        db.session.commit()
+        return render_template('index.html', output_list=output_list)
     else:
         output_list = [{'0_0' : '아직 없음'}]
         return render_template('index.html', output_list=output_list)
@@ -39,4 +35,4 @@ def ch():
     if request.form:
         if request.form['db_remove']:
             db.session.remove()
-    return render_template('db_test.html', db_items=db_items)
+    return render_template('test.html', db_items=db_items)

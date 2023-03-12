@@ -10,13 +10,12 @@
     {{ db_items }}
 
     <table>
-    {% for item in db_items %}
-        <tr>
-            <td>{{ item.id }}</td>
-            <td>{{ item.p_id }}</td>
-            <td>{{ item.sent }}</td>
-        </tr>
-    {% endfor %}
+        {% for item in db_items %}
+            <tr>
+                <td>{{ item.id }}</td>
+                <td>{{ item.para }}</td>
+            </tr>
+        {% endfor %}
     </table>
 
     <form action="/test" method="post">

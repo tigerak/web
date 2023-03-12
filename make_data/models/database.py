@@ -21,7 +21,6 @@ class Sent_data(db.Model):
     p_id = db.Column(db.Integer, db.ForeignKey('para_data.id'))
     sent = db.Column(db.String)
     
-    
     def __init__(self, sent):
         self.sent = sent
         
