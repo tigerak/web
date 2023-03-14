@@ -25,4 +25,4 @@ class Sent_data(db.Model):
         self.sent = sent
         
     def __repr__(self):
-        return f'{self.sent}'
+        return f'{self.sent[:20]}'

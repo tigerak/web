@@ -8,6 +8,7 @@ from flask import render_template, request
 @bp.route('/', methods=['GET', 'POST'])
 def decom_but():
     if request.form:
+        json = '아직 안 지웠음'
         para = request.form['paragraph']
         para_input = Para_data(para)
         
@@ -18,7 +19,7 @@ def decom_but():
                 sent_input.para_data = para_input
         db.session.add(sent_input)
         db.session.commit()
-        return render_template('index.html', output_list=output_list)
+        return render_template('index.html', output_list=output_list, json=json)
     else:
         output_list = [{'0_0' : '아직 없음'}]
         return render_template('index.html', output_list=output_list)

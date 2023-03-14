@@ -20,17 +20,18 @@
         <p><textarea type="text", name="paragraph", id="input", cols="50" rows="10"></textarea></p>
         <p><input type="submit" value="분해"></p>
     </form>
-    <p>{{m}}</p>
+    <p>{{json}}</p>
     <p>
         {% for sentence in output_list %}
+            {{loop.index}}.
             {% set s_k = '0' %}
             {% for k, word in sentence.items() %}
                 {% set s_k = k.split('_')[0] %}
                 <input type='checkbox', class={{s_k}}, id={{k}}, value={{k}}><label for={{k}}, class='word_select'>{{ word }}</label>
             {% endfor %}
             <br>
-            <button onclick="setHighlight('highlight-yellow')">노랑색</button>
             <button onclick="doSave({{s_k}})">노랑 저장</button>
+            <button onclick="setHighlight('highlight-yellow')">노랑색</button>
             <button onclick="setHighlight('highlight-green')">연두색</button>
             <button onclick="removeHighlight()">하이라이트 제거</button>
             <button onclick="showHighlighted()">하이라이트 출력</button>
