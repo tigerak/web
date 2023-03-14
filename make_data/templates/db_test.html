@@ -4,24 +4,56 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
     <title>Document</title>
+
+
 </head>
 <body>
-    {{ db_items }}
+    <div>
+        <button type="submit" name="to_home" onclick="window.location.href='/'">Go to Main Page</button>
+        <button type="submit" name="to_db_test" onclick="window.location.href='/db_test'">Go to DB Test</button>
+    </div>
 
+    <div style="width:600px;">
+        <div style="border: 1px solid gold; float: left; width: 49%;">
+            <table>
+            {% for p_item in P_items %}
+                <tr>
+                    <td>{{ p_item.id }}</td>
+                    <td>{{ p_item.para }}</td>
+                </tr>
+            {% endfor %}
+            </table>
+        </div>
+
+        <div style="border: 1px solid blue; float: left; width: 49%;">
+            <table>
+            {% for s_item in S_items %}
+                <tr>
+                    <td>{{ s_item.id }}</td>
+                    <td>{{ s_item.p_id }}</td>
+                    <td>{{ s_item.sent }}</td>
+                </tr>
+            {% endfor %}
+            </table>
+        </div>
+    </div>
+
+    <div style="clear: both">
+        <form action="/db_test" method="post">
+            <p><input type="number", name="delNum">
+            <input type="submit" value="번 지문 삭제"></butten></p>
+        </form>
+    </div>
     <table>
-    {% for item in db_items %}
-        <tr>
-            <td>{{ item.id }}</td>
-            <td>{{ item.p_id }}</td>
-            <td>{{ item.sent }}</td>
-        </tr>
-    {% endfor %}
-    </table>
-
-    <form action="/test" method="post">
-        <p><button type="submit" name="db_remove">DB 삭제</button></p>
-    </form>
-
+        {% for s_item in m %}
+            <tr>
+                <td>{{ s_item.id }}</td>
+                <td>{{ s_item.p_id }}</td>
+                <td>{{ s_item.sent }}</td>
+            </tr>
+        {% endfor %}
+        </table>
 </body>
 </html>

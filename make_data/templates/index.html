@@ -15,12 +15,17 @@
     </style>
 </head>
 <body>
+    <div>
+        <button type="submit" name="to_home" onclick="window.location.href='/'">Go to Main Page</button>
+        <button type="submit" name="to_db_test" onclick="window.location.href='/db_test'">Go to DB Test</button>
+    </div>
+
     <h3>지문을 입력해주세요.</h3>
     <form action="/" method="post">
-        <p><textarea type="text", name="paragraph", id="input", cols="50" rows="10"></textarea></p>
+        <p><textarea type="text", name="decomp", id="input", cols="50" rows="10"></textarea></p>
         <p><input type="submit" value="분해"></p>
     </form>
-    <p>{{json}}</p>
+
     <p>
         {% for sentence in output_list %}
             {{loop.index}}.
