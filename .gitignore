@@ -4,3 +4,6 @@ __pycache__/
 
 #
 test.py
+DB.db
+test_DB.db
+config.py
