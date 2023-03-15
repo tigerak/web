@@ -41,7 +41,7 @@ def api():
 @bp.route('/feed', methods=['GET', 'POST'])
 def get_json():
     ans = Maum_api.part
-    response = requests.post('https://norchestra.maum.ai/harmonize/dosmart', json=ans)
+    response = requests.post(Maum_api.url, json=ans)
     text = response.json()
     return text
 

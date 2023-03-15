@@ -22,3 +22,4 @@ class Maum_api:
             "https://e4e7-14-36-34-28.jp.ngrok.io/api"
         ]
     }
+    url = 'https://norchestra.maum.ai/harmonize/dosmart'
