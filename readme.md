@@ -1,16 +1,16 @@
-literacy
-    +--make_data
-        +--main
-            +--__init__.py
-            +--routes.py
-        +--models
-            +--database.py
-        +--templates
-            +--index.html
-        +--utils
-            +--__init__.py
-            +--kogpt.py
-        +--__init__.py
-        +--extensions.py
-    +--run.py
+literacy    
+    +--make_data    
+        +--main    
+            +--__init__.py    
+            +--routes.py    
+        +--models    
+            +--database.py    
+        +--templates    
+            +--index.html    
+        +--utils    
+            +--__init__.py    
+            +--kogpt.py    
+        +--__init__.py    
+        +--extensions.py    
+    +--run.py    
     +--requirements.txt
