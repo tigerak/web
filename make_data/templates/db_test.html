@@ -21,6 +21,7 @@
             {% for p_item in P_items %}
                 <tr>
                     <td>{{ p_item.id }}</td>
+                    <td>{{ p_item.user_id }}</td>
                     <td>{{ p_item.para }}</td>
                 </tr>
             {% endfor %}
@@ -50,8 +51,9 @@
         {% for s_item in m %}
             <tr>
                 <td>{{ s_item.id }}</td>
-                <td>{{ s_item.p_id }}</td>
-                <td>{{ s_item.sent }}</td>
+                <td>{{ s_item.user_id }}</td>
+                <td>{{ s_item.prompt }}</td>
+                <td>{{ s_item.completion }}</td>
             </tr>
         {% endfor %}
         </table>

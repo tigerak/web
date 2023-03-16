@@ -1,18 +1,46 @@
 from make_data.main import bp
-from make_data.utils import decomposition
-from make_data.models.database import Para_data, Sent_data
+from make_data.utils import decomposition, SendToChatGPT
+from make_data.models.database import Para_data, Sent_data, User_only
 from make_data.extensions import db
 from config import Maum_api
 
 from flask import render_template, request, redirect, url_for
 import requests
+import json
 
 @bp.route('/', methods=['GET', 'POST'])
+def login():
+    message = 'ID를 입력해주세요'
+    
+    if request.method == 'POST':
+        user_list = []
+        for i in User_only.query.with_entities(User_only.user_id).all():
+            user_list.append(i[0])
+    
+        user_id = request.form['user_id']
+    
+        if user_id is '':
+            message = 'ID를 입력하지 않았습니다.'
+            return render_template('index.html', message=message)
+        
+        elif user_id not in user_list:
+            message = '없는 ID 입니다.'
+            return render_template('index.html', message=message)
+        
+        elif user_id in user_list:
+            return redirect(f'/api/{user_id}')
+        
+    return render_template('index.html', message=message)
+    
+    
+
+@bp.route('/decom', methods=['GET', 'POST'])
 def decom_but():
-    if request.form:
-        json = '아직 안 지웠음'
+    user_id = 'loader'
+    
+    if request.method == 'POST':
         para = request.form['decomp']
-        para_input = Para_data(para)
+        para_input = Para_data(user_id, para)
         
         output_list = decomposition(para)
         for sent in output_list:
@@ -21,29 +49,36 @@ def decom_but():
                 sent_input.para_data = para_input
         db.session.add(sent_input)
         db.session.commit()
-        return render_template('index.html', output_list=output_list)
+        return render_template('decom.html', output_list=output_list)
 
     else:
-        return render_template('index.html')
-    
-@bp.route('/api', methods=['GET', 'POST'])
-def api():
-    import json
-    prompt = "다음 글을 따라쓰면서 중요한 단어에는 별표시를 해줘. 그리고 한 문장으로 요약해줘. : "
-    completion = "\n\n\n성소수자 등 성 문제에 대한 인식의 충돌도 이에 해당된다고 볼 수 있다. 최근 국내에서 주목받는 MZ세대의 정치적 지향의 변화에는, ‘정치적 올바름(PC)’에 대한 좌절과 반발이 녹아있다. 앞서 서술한 부동산 문제 등을 둘러싼 사회경제적 좌절과 함께, 민주화시대를 관통하며 작동해온 각종 PC에 대한 정서적 반발이 작동하고 있는 것이다."
-    data = {
-        "prompt" : prompt,
-        "completion" : completion
-    }
-    send = json.dumps(data)
-    return send
+        return render_template('decom.html')
 
-@bp.route('/feed', methods=['GET', 'POST'])
-def get_json():
-    ans = Maum_api.part
-    response = requests.post(Maum_api.url, json=ans)
-    text = response.json()
-    return text
+@bp.route('/api/<user_id>', methods=['GET', 'POST'])
+def api(user_id):
+    # user_id = 'loader'
+    
+    if request.form:
+        query = request.form
+        SendToChatGPT().save_db(user_id, query)
+        db_items = User_only.query.filter_by(user_id=user_id).all()
+        
+        maum_url, data = Maum_api(user_id).doc()
+        response = requests.post(maum_url, json=data)
+        text = response.json()
+        return render_template('api_test.html', 
+                               user_id=user_id, 
+                               db_items=db_items,
+                               text=text)
+        
+    return render_template('api_test.html', user_id=user_id)
+
+@bp.route('/api/feed/<user_id>', methods=['POST'])
+def send_json(user_id):
+    if request.method == 'POST':
+        send = SendToChatGPT().make_data(user_id)
+        return send
+
 
 @bp.route('/db_test', methods=['GET', 'POST'])
 def sql():
@@ -63,7 +98,3 @@ def sql():
         
     return render_template('db_test.html', P_items=P_items ,S_items=S_items)
 
-@bp.route('/test')
-def ch():
-    db_items = Para_data.query.all()
-    return render_template('test.html', db_items=db_items)

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div>
+        <button type="submit" name="to_home" onclick="window.location.href='/'">Go to Main Page</button>
+        <button type="submit" name="to_db_test" onclick="window.location.href='/db_test'">Go to DB Test</button>
+    </div>
+
+    <h3>질문과 지문을 입력해주세요.</h3>
+    <form action="/api/{{user_id}}" method="post">
+        <p><input type="text", name="api_prompt", size="100", value="다음 글에서 중요한 단어를 찾아줘. 그리고 요약과 틀린 요약을 해줘"></p>
+        <p><textarea type="text", name="api_completion", cols="100" rows="10", placeholder="지문을 입력하세요."></textarea></p>
+        <p><input type="submit" value="Send to ChatGPT" accesskey="q"> 단축키 : Alt + q</p>
+    </form>
+    {{send}}<br>
+    {{text}}
+    <table>
+        {% for item in db_items %}
+            <tr>
+                <td>{{ item.id }}</td>
+                <td>{{ item.user_id }}</td>
+                <td>{{ item.prompt }}</td>
+                <td>{{ item.completion }}</td>
+            </tr>
+        {% endfor %}
+        </table>
+</body>
+</html>
