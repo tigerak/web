@@ -7,10 +7,14 @@ literacy
         +--models    
             +--database.py    
         +--templates    
-            +--index.html    
+            +--index.html   
+            +--api_test.html
+            +--decom.html
+            +--db_test.html
         +--utils    
             +--__init__.py    
-            +--kogpt.py    
+            +--kogpt.py
+            +--chatgpt.py
         +--__init__.py    
         +--extensions.py    
     +--run.py    
