@@ -1,0 +1,12 @@
+
+{% for sentence in output_list %}
+            {{loop.index}}.
+            {% set s_k = '0' %}
+            {% for k, word in sentence.items() %}
+                {% set s_k = k.split('_')[0] %}
+                <input type='checkbox', class={{s_k}}, id={{k}}, value={{k}}><label for={{k}}, class='word_select'>{{ word }}</label>
+            {% endfor %}
+            {% endfor %}
+
+
+            <button onclick="doSave({{s_k}})">노랑 저장</button>

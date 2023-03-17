@@ -16,7 +16,7 @@
 </head>
 <body>
     <div>
-        <button type="submit" name="to_home" onclick="window.location.href='/'">Go to Main Page</button>
+        <button type="submit" name="to_home" onclick="window.location.href='/decom'">Go to Main Page</button>
         <button type="submit" name="to_db_test" onclick="window.location.href='/db_test'">Go to DB Test</button>
     </div>
 
@@ -27,15 +27,14 @@
     </form>
 
     <p>
-        {% for sentence in output_list %}
-            {{loop.index}}.
-            {% set s_k = '0' %}
-            {% for k, word in sentence.items() %}
-                {% set s_k = k.split('_')[0] %}
-                <input type='checkbox', class={{s_k}}, id={{k}}, value={{k}}><label for={{k}}, class='word_select'>{{ word }}</label>
-            {% endfor %}
+        <dev style="width:800px;">
+            {% for i in output_list %}
+                {% for k, v in i.items() %}
+                    <input type='checkbox', id='k', value='v'><label for='k'>{{ v }}</label>
+                {% endfor %} 
+            {% endfor %} 
             <br>
-            <button onclick="doSave({{s_k}})">노랑 저장</button>
+            
             <button onclick="setHighlight('highlight-yellow')">노랑색</button>
             <button onclick="setHighlight('highlight-green')">연두색</button>
             <button onclick="removeHighlight()">하이라이트 제거</button>
@@ -43,7 +42,8 @@
             <br>
             <div id="result-container"></div>
             <div id="result"></div>
-        {% endfor %} 
+        
+        </dev>
     </p>
 
     <script>

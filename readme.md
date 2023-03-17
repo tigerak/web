@@ -20,3 +20,6 @@ literacy
     +--run.py    
     +--requirements.txt
 ```
+수정하실 HTML : make_data -> templates -> decom.html
+참고하실 DB : make_data -> models -> database.py
+라우터 : make_data -> main -> routes.py -> @bp.route('/decom')

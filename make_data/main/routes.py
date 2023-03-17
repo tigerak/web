@@ -1,6 +1,6 @@
 from make_data.main import bp
 from make_data.utils import decomposition, SendToChatGPT
-from make_data.models.database import Para_data, Sent_data, User_only
+from make_data.models.database import Text_data, Sent_data, Point_data, Key_data, User_only
 from make_data.extensions import db
 from config import Maum_api
 
@@ -31,23 +31,31 @@ def login():
             return redirect(f'/api/{user_id}')
         
     return render_template('index.html', message=message)
-    
-    
 
 @bp.route('/decom', methods=['GET', 'POST'])
 def decom_but():
     user_id = 'loader'
     
     if request.method == 'POST':
-        para = request.form['decomp']
-        para_input = Para_data(user_id, para)
+        text = request.form['decomp']
+        text_input = Text_data(user_id, text)
         
-        output_list = decomposition(para)
-        for sent in output_list:
-            for _, v in sent.items():
-                sent_input = Sent_data(sent=v)
-                sent_input.para_data = para_input
-        db.session.add(sent_input)
+        sent_list, output_list = decomposition(text)
+        
+        # Sent DB Save
+        for sent in sent_list:
+            sent_input = Sent_data(sent=sent)
+            sent_input.text_data = text_input
+            
+        for w in output_list:
+            for _, m in w.items():
+                point_input = Point_data(point=m)
+                point_input.text_data = text_input
+                for k in text[:10]:
+                    key_input = Key_data(key=k)
+                    key_input.point_data = point_input
+            
+        db.session.add(key_input)
         db.session.commit()
         return render_template('decom.html', output_list=output_list)
 
@@ -65,15 +73,16 @@ def api(user_id):
         
         maum_url, data = Maum_api(user_id).doc()
         response = requests.post(maum_url, json=data)
-        text = response.json()
+        # text = response.json()
         return render_template('api_test.html', 
                                user_id=user_id, 
                                db_items=db_items,
-                               text=text)
+                               text=response,
+                               send=data)
         
     return render_template('api_test.html', user_id=user_id)
 
-@bp.route('/api/feed/<user_id>', methods=['POST'])
+@bp.route('/api/feed/<user_id>', methods=['GET', 'POST'])
 def send_json(user_id):
     if request.method == 'POST':
         send = SendToChatGPT().make_data(user_id)
@@ -82,19 +91,22 @@ def send_json(user_id):
 
 @bp.route('/db_test', methods=['GET', 'POST'])
 def sql():
-    P_items = Para_data.query.all()
-    S_items = Sent_data.query.all()
+    T_items = Text_data.query.all()
+    P_items = Point_data.query.all()
+    K_items = Key_data.query.all()
     
     # 지문 삭제
     if request.form:
         del_num = request.form['delNum']
         
-        Para_data.query.filter_by(id=del_num).delete()
-        Sent_data.query.filter_by(p_id=del_num).delete()
+        Text_data.query.filter_by(id=del_num).delete()
+        Point_data.query.filter_by(t_id=del_num).delete()
+        Key_data.query.filter_by(p_id=del_num).delete()
         db.session.commit()
         
-        P_items = Para_data.query.all()
-        S_items = Sent_data.query.all()
+        T_items = Text_data.query.all()
+        P_items = Point_data.query.all()
+        K_items = Key_data.query.all()
         
-    return render_template('db_test.html', P_items=P_items ,S_items=S_items)
+    return render_template('db_test.html', T_items=T_items, P_items=P_items ,S_items=K_items)
 

@@ -8,7 +8,7 @@
 </head>
 <body>
     <div>
-        <button type="submit" name="to_home" onclick="window.location.href='/'">Go to Main Page</button>
+        <button type="submit" name="to_home" onclick="window.location.href='/decom'">Go to Main Page</button>
         <button type="submit" name="to_db_test" onclick="window.location.href='/db_test'">Go to DB Test</button>
     </div>
 
@@ -16,7 +16,7 @@
     <form action="/api/{{user_id}}" method="post">
         <p><input type="text", name="api_prompt", size="100", value="다음 글에서 중요한 단어를 찾아줘. 그리고 요약과 틀린 요약을 해줘"></p>
         <p><textarea type="text", name="api_completion", cols="100" rows="10", placeholder="지문을 입력하세요."></textarea></p>
-        <p><input type="submit" value="Send to ChatGPT" accesskey="q"> 단축키 : Alt + q</p>
+        <p><input type="submit" value="Send to ChatGPT" accesskey="q"> (단축키 : Alt + q)</p>
     </form>
     {{send}}<br>
     {{text}}
