@@ -13,6 +13,8 @@ def login():
     message = 'ID를 입력해주세요'
     
     if request.method == 'POST':
+        # Get User ID
+        user_id = request.form['user_id']
         # User list
         user_list = {'등록된 ID 목록' : []}
         for i in User_only.query.with_entities(User_only.user_id).all():
@@ -20,8 +22,6 @@ def login():
             
         # Sign in
         if request.form['choice'] == 'Sign in':
-        
-            user_id = request.form['user_id']
         
             if user_id == '':
                 message = 'ID를 입력하지 않았습니다.'
@@ -36,12 +36,35 @@ def login():
             
         # Sign UP
         elif request.form['choice'] == 'Sign up':
-            user_id = request.form['user_id']
-            send_api_data = User_only(user_id, 'prompt', 'completion')
-            db.session.add(send_api_data)
-            db.session.commit()
+            
+            if user_id not in user_list['등록된 ID 목록']:
+                send_api_data = User_only(user_id, 'prompt', 'completion')
+                db.session.add(send_api_data)
+                db.session.commit()
+                
+                message = 'ID가 등록되었습니다. \nSign in 해주세요.'
+                
+                user_list = {'등록된 ID 목록' : []}
+                for i in User_only.query.with_entities(User_only.user_id).all():
+                    user_list['등록된 ID 목록'].append(i[0])
+                    
+            elif user_id in user_list['등록된 ID 목록']:
+                message = '이미 등록된 ID입니다.'
             return render_template('index.html', message=message, user_list=user_list)
         
+        # Remove ID
+        elif request.form['choice'] == 'Remove ID':
+            User_only.query.filter_by(user_id=user_id).delete()
+            # db.session.add(remove_id)
+            db.session.commit()
+            
+            user_list = {'등록된 ID 목록' : []}
+            for i in User_only.query.with_entities(User_only.user_id).all():
+                user_list['등록된 ID 목록'].append(i[0])
+            
+            message = f'{user_id}가 삭제되었습니다.'
+            return render_template('index.html', message=message, user_list=user_list)
+
     return render_template('index.html', message=message)
 
 @bp.route('/decom', methods=['GET', 'POST'])
