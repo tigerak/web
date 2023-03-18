@@ -1,4 +1,4 @@
-from transformers import AutoTokenizer
+# from transformers import AutoTokenizer
 
 # Load KOGPT Tokenizer
 # tokenizer = AutoTokenizer.from_pretrained(
