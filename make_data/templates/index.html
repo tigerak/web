@@ -7,20 +7,22 @@
     <title>Document</title>
 </head>
 <body>
-    {{message}}
-    <form action="/" method="POST">
-        <p>
-            <input type="text", name="user_id", size="15">
-            <input type="submit" value="Sign in" required name="choice">
-        </p>
-        <p>
-            <input type="submit" value="Sign up" required name="choice">(생성할 ID를 입력하고 클릭하세요.)
-        </p>
-        <p>
-            <input type="submit" value="Remove ID" required name="choice">(삭제할 ID를 입력하고 클릭하세요.)
-        </p>
-        <p>
-            {{ user_list }}
-    </form>
+    <div style="border: 1px solid gold; background-color: #F3E5AB; width:400px; margin:0 auto; padding: 10px;">
+        <u><b>{{message}}</b></u>
+        <form action="/" method="POST">
+            <p>
+                <input type="text", name="user_id", size="15">
+                <input type="submit" value="Sign in" required name="choice">
+            </p>
+            <p>
+                <input type="submit" value="Sign up" required name="choice">(생성할 ID를 입력하고 클릭하세요.)
+            </p>
+            <p>
+                <input type="submit" value="Remove ID" required name="choice">(삭제할 ID를 입력하고 클릭하세요.)
+            </p>
+            <p>
+                {{ user_list }}
+        </form>
+    </div>
 </body>
 </html>

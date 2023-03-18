@@ -77,12 +77,6 @@ def send_json(user_id):
     if request.method == 'POST':
         send = SendToChatGPT().make_data(user_id)
         return send
-    # data = {
-    #         "prompt" : '배고파',
-    #         "completion" : '밥줘'
-    #     }
-    # send = json.dumps(data)
-    # return send
 
 
 @bp.route('/db_test', methods=['GET', 'POST'])
