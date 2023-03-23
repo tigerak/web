@@ -1,9 +1,10 @@
 import json
 import openai
+from sqlalchemy import desc
 
 from config import Openai_api
-from make_data.extensions import db
-from make_data.models.database import User_only
+from make_web.extensions import db
+from make_web.models.literacy.database import User_only
         
     
 class SendToChatGPT():
@@ -16,15 +17,20 @@ class SendToChatGPT():
         db.session.add(send_api_data)
         db.session.commit()
         
-    def make_data(self, user_id):
-        prompt = User_only.query.filter_by(user_id=user_id).with_entities(User_only.prompt).first()[0]
-        completion = User_only.query.filter_by(user_id=user_id).with_entities(User_only.completion).first()[0]
+    def make_data(self):
+        # prompt = User_only.query.filter_by(user_id=user_id).with_entities(User_only.prompt).first()[0]
+        # completion = User_only.query.filter_by(user_id=user_id).with_entities(User_only.completion).first()[0]
+         # data = {
+        #     "prompt" : content['prompt'],
+        #     "completion" : content['completion']
+        # }
+        content = User_only.query.order_by(desc(User_only.date)).limit(1)
+        data = {}
+        for i in content:
+            data['prompt'] = i.prompt
+            data['completion'] = i.completion
         
-        self.data = {
-            "prompt" : prompt,
-            "completion" : completion
-        }
-        return json.dumps(self.data)
+        return json.dumps(data)
     
         
 class ChatGPT():

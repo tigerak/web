@@ -28,36 +28,21 @@
 
     <p>
         <dev style="width:800px;">
-            {% for i in output_list %}
-                {% for k, v in i.items() %}
-                    <input type='checkbox', id='k', value='v'><label for='k'>{{ v }}</label>
-                {% endfor %} 
+            {% for i in sent_list %}
+                 {{i}}
+                <br>
+                <button onclick="setHighlight('highlight-yellow')">Key</button>
+                <button onclick="setHighlight('highlight-green')">Point</button>
+                <button onclick="removeHighlight()">모두 제거</button>
+                <button onclick="showHighlighted()">저장</button>
+                <br>
+                <div id="result-container"></div>
+                <div id="result"></div>
             {% endfor %} 
-            <br>
-            
-            <button onclick="setHighlight('highlight-yellow')">노랑색</button>
-            <button onclick="setHighlight('highlight-green')">연두색</button>
-            <button onclick="removeHighlight()">하이라이트 제거</button>
-            <button onclick="showHighlighted()">하이라이트 출력</button>
-            <br>
-            <div id="result-container"></div>
-            <div id="result"></div>
-        
         </dev>
     </p>
 
     <script>
-        function doSave(s_k) {
-            let chk_len = document.getElementById(s_k);
-            let result = [];
-
-            for (let i=0; i<chk_len.length; i++) {
-                if (chk_len[i].checked) {
-                    result.push(chk_len[i].value);
-                }
-            }
-            consol.log(result)
-        }
 
         function setHighlight(className) {
             var selection = window.getSelection().getRangeAt(0);
@@ -101,8 +86,8 @@
             var yellowContainer = document.createElement('div');
             var greenContainer = document.createElement('div');
             
-            yellowContainer.innerHTML = '<h3>노랑색</h3>';
-            greenContainer.innerHTML = '<h3>연두색</h3>';
+            yellowContainer.innerHTML = '<h3>KeyWord</h3>';
+            greenContainer.innerHTML = '<h3>PointWord</h3>';
             
             for (var i = 0; i < yellowWords.length; i++) {
               yellowContainer.appendChild(yellowWords[i].cloneNode(true));

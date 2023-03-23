@@ -3,6 +3,9 @@ __pycache__/
 *.py[cod]
 
 #
+weight
+
+#
 test.py
 DB.db
 test_DB.db

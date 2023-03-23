@@ -16,7 +16,7 @@
     </div>
 
     <div style="width:800px;">
-        <div style="border: 1px solid gold; float: left; width: 33%;">
+        <div style="border: 1px solid gold; float: left; width: 24%;">
             <table>
             {% for t_item in T_items %}
                 <tr>
@@ -28,27 +28,39 @@
             </table>
         </div>
 
-        <div style="border: 1px solid gold; float: left; width: 33%;">
+        <div style="border: 1px solid gold; float: left; width: 24%;">
             <table>
-            {% for p_item in P_items %}
+            {% for s_item in S_items %}
                 <tr>
-                    <td>{{ p_item.id }}</td>
-                    <td>{{ p_item.t_id }}</td>
-                    <td>{{ p_item.point }}</td>
+                    <td>{{ s_item.id }}</td>
+                    <td>{{ s_item.t_id }}</td>
+                    <td>{{ s_item.sent }}</td>
                 </tr>
             {% endfor %}
             </table>
         </div>
 
-        <div style="border: 1px solid blue; float: left; width: 33%;">
+        <div style="border: 1px solid blue; float: left; width: 24%;">
             <table>
-            {% for s_item in S_items %}
+            {% for k_item in K_items %}
                 <tr>
-                    <td>{{ s_item.id }}</td>
-                    <td>{{ s_item.p_id }}</td>
-                    <td>{{ s_item.key }}</td>
+                    <td>{{ k_item.id }}</td>
+                    <td>{{ k_item.s_id }}</td>
+                    <td>{{ k_item.key }}</td>
                 </tr>
             {% endfor %}
+            </table>
+        </div>
+        <div style="border: 1px solid blue; float: left; width: 24%;">
+            <table>
+                {% for p_item in P_items %}
+                    <tr>
+                        <td>{{ p_item.id }}</td>
+                        <td>{{ p_item.s_id }}</td>
+                        <td>{{ p_item.k_id }}</td>
+                        <td>{{ p_item.point }}</td>
+                    </tr>
+                {% endfor %}
             </table>
         </div>
     </div>
@@ -59,15 +71,6 @@
             <input type="submit" value="번 지문 삭제"></butten></p>
         </form>
     </div>
-    <table>
-        {% for s_item in m %}
-            <tr>
-                <td>{{ s_item.id }}</td>
-                <td>{{ s_item.user_id }}</td>
-                <td>{{ s_item.prompt }}</td>
-                <td>{{ s_item.completion }}</td>
-            </tr>
-        {% endfor %}
-        </table>
+    
 </body>
 </html>

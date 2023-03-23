@@ -1,4 +1,4 @@
-from make_data.extensions import db
+from make_web.extensions import db
 
 from flask import Flask
 
@@ -8,8 +8,11 @@ def create_app(config_class):
     
     db.init_app(app)
     
-    from make_data.main import bp as main_bp
+    from make_web.main import bp as main_bp
     app.register_blueprint(main_bp)
+    
+    from make_web.main import kakao_bp
+    app.register_blueprint(kakao_bp)
 
     return app
 
