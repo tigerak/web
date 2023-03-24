@@ -19,32 +19,54 @@ def login():
 @bp.route('/decom', methods=['GET', 'POST'])
 def decom_but():
     user_id = 'loader'
-    
+    output_list = []
     if request.method == 'POST':
-        text = request.form['decomp']
-        text_input = Text_data(user_id, text)
-        
-        sent_list, output_list = decomposition(text)
-        
-        # Sent DB Save
-        for sent in sent_list:
-            sent_input = Sent_data(sent=sent)
-            sent_input.text_data = text_input
+        if 'decomp' in request.form.keys():
+            text = request.form['decomp']
+            # text_input = Text_data(user_id, text)
             
-        # for w in output_list:
-        #     for _, m in w.items():
-        #         point_input = Point_data(point=m)
-        #         point_input.text_data = text_input
-        #         for k in text[:10]:
-        #             key_input = Key_data(key=k)
-        #             key_input.point_data = point_input
+            sent_list, output_list = decomposition(text)
             
-        db.session.add(sent_input)
-        db.session.commit()
-        return render_template('literacy/decom.html', sent_list=sent_list)
+            # Sent DB Save
+            # for sent in sent_list:
+            #     sent_input = Sent_data(sent=sent)
+            #     sent_input.text_data = text_input
+                
+            #     for s in output_list:
+            #         for k, v in s.items():
+            #             key_input = Key_data(key=v)
+            #             key_input.sent_data = sent_input
+            #         for k in text[:10]:
+            #             key_input = Key_data(key=k)
+            #             key_input.point_data = point_input
+                
+            # db.session.add(sent_input)
+            # db.session.commit()
+            return render_template('literacy/decom.html', 
+                                output_list=output_list)
+            
+        elif 'key' in request.form.keys():
+            sent_list = request.form
+            return render_template('literacy/decom.html', 
+                                output_list=output_list,
+                                sent_list=sent_list)
+            
+        else:
+            sent_list = request.form
+            return render_template('literacy/decom.html', 
+                                output_list=output_list,
+                                sent_list=sent_list)
+        
 
     else:
         return render_template('literacy/decom.html')
+    
+@bp.route('/sentence', methods=['POST'])
+def sentence():
+    if request.method == 'POST':
+        md = request.form
+        return render_template('literacy/decom.html',
+                               sent_list=md)
 
 
 from sqlalchemy import desc
