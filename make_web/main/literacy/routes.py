@@ -1,7 +1,8 @@
 from make_web.main import bp
 from make_web.extensions import db
 from make_web.models import Text_data, Sent_data, Point_data, Key_data, User_only
-from make_web.utils import sign, decomposition, SendToChatGPT, ChatGPT
+from make_web.utils import (sign, decomposition, classification, 
+                            SendToChatGPT, ChatGPT)
 from config import Maum_api
 
 from flask import render_template, request, redirect, url_for
@@ -19,54 +20,39 @@ def login():
 @bp.route('/decom', methods=['GET', 'POST'])
 def decom_but():
     user_id = 'loader'
-    output_list = []
+    
     if request.method == 'POST':
         if 'decomp' in request.form.keys():
-            text = request.form['decomp']
-            # text_input = Text_data(user_id, text)
+            text_value = request.form['decomp']
+            text_input = Text_data(user_id, text_value)
             
-            sent_list, output_list = decomposition(text)
+            sent_list, output_list = decomposition(text_value)
             
             # Sent DB Save
-            # for sent in sent_list:
-            #     sent_input = Sent_data(sent=sent)
-            #     sent_input.text_data = text_input
+            for i, sent in enumerate(sent_list):
+                sent_input = Sent_data(s_id=i, sent=sent)
+                sent_input.text_data = text_input
                 
-            #     for s in output_list:
-            #         for k, v in s.items():
-            #             key_input = Key_data(key=v)
-            #             key_input.sent_data = sent_input
-            #         for k in text[:10]:
-            #             key_input = Key_data(key=k)
-            #             key_input.point_data = point_input
-                
-            # db.session.add(sent_input)
-            # db.session.commit()
+            db.session.add(sent_input)
+            db.session.flush()
+            
+            id = text_input.id
             return render_template('literacy/decom.html', 
+                                   sent_list=id,
                                 output_list=output_list)
-            
-        elif 'key' in request.form.keys():
-            sent_list = request.form
-            return render_template('literacy/decom.html', 
-                                output_list=output_list,
-                                sent_list=sent_list)
-            
-        else:
-            sent_list = request.form
-            return render_template('literacy/decom.html', 
-                                output_list=output_list,
-                                sent_list=sent_list)
         
-
     else:
         return render_template('literacy/decom.html')
     
 @bp.route('/sentence', methods=['POST'])
 def sentence():
     if request.method == 'POST':
-        md = request.form
+        
+        key_list, point_list = classification(request.form)
+            
         return render_template('literacy/decom.html',
-                               sent_list=md)
+                               key_list=key_list,
+                               point_list=point_list)
 
 
 from sqlalchemy import desc

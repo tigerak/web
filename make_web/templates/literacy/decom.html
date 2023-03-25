@@ -25,35 +25,40 @@
         <p><textarea type="text" name="decomp" id="input" cols="50" rows="10"></textarea></p>
         <p><input type="submit" value="분해"></p>
     </form>
-    {{sent_list}}
+    {{sent_list}}</br>
+    {{key_list}}</br>
+    {{point_list}}
     
     <div style="width:800px;">
         {% for s in output_list %}
             {% for s_k, s_v in s.items() %}
                 <div>
-                    <form id="frm_{{s_k}}" name="frm_{{s_k}}" action="/decom" method="POST">
-                        {% for w_k, w_v in s_v.items() %}
-                            {{ w_v }}
-                        {% endfor %}
-                        
-                        <br>
-                        <button type="button" onclick="setHighlight('KeyHighlight_{{s_k}}')">Key</button>
-                        <button type="button" onclick="setHighlight('PointHighlight_{{s_k}}')">Point</button>
-                        <button type="button" onclick="removeHighlight({{s_k}})">모두 제거</button>
-                        <button onclick="showHighlighted({{s_k}})">저장</button>
-                        <br>
-                        <div id="result-container_{{s_k}}"></div>
-                        <div id="result"></div>
-                        
-                        <input type="hidden" id="yellowHighlightVal" name="key" value="" />
-                        <input type="hidden" id="greenHighlightVal" name="point" value="" />
+                    {% for w_k, w_v in s_v.items() %}
+                        {{ w_v }}
+                    {% endfor %}
+                    
+                    <br>
+                    <button type="button" onclick="setHighlight('KeyHighlight_{{s_k}}')">Key</button>
+                    <button type="button" onclick="setHighlight('PointHighlight_{{s_k}}')">Point</button>
+                    <button type="button" onclick="removeHighlight({{s_k}})">모두 제거</button>
+                    <button type="button" onclick="showHighlighted({{s_k}})">저장</button>
+                    <br>
+                    
+                    <form method="POST" action="/sentence" target="iframe">
+                    <div id="result-container_{{s_k}}"></div>
+                    <input type="hidden" name="{{s_k}}" id="{{s_k}}">
+                    <button type="submit" onclick="senddiv('{{s_k}}')">Post Div</button>
                     </form>
                 </div>
             {% endfor %}
         {% endfor %} 
     </div>
-
+    <!-- <iframe id="iframe" name="iframe" style="display:none"></iframe> -->
     <script>
+        function senddiv(s_k) {
+            var divValue = document.getElementById('result-container_'+s_k).innerHTML;
+            document.getElementById(s_k).value = divValue;
+        }
 
         function setHighlight(className) {
             var selection = window.getSelection().getRangeAt(0);
@@ -89,9 +94,9 @@
             
             var yellowContainer = document.createElement('div');
             var greenContainer = document.createElement('div');
-            
-            yellowContainer.innerHTML = '<h3>KeyWord</h3>';
-            greenContainer.innerHTML = '<h3>PointWord</h3>';
+
+            yellowContainer.innerHTML = '<b>KeyWord : </b>';
+            greenContainer.innerHTML = '<b>PointWord : </b>';
             
             for (var i = 0; i < yellowWords.length; i++) {
               yellowContainer.appendChild(yellowWords[i].cloneNode(true));
@@ -100,18 +105,11 @@
             for (var i = 0; i < greenWords.length; i++) {
               greenContainer.appendChild(greenWords[i].cloneNode(true));
             }
-            
+
             var resultContainer = document.getElementById('result-container_'+s_k);
-            resultContainer.innerHTML = '선택한 단어 확인';
             resultContainer.appendChild(yellowContainer);
             resultContainer.appendChild(greenContainer);
-            
-            $("#yellowHighlightVal").val(yellowContainer);
-            $("#greenHighlightVal").val(greenContainer);
-            
-            var frm = document.frm_0; 
-            frm.submit();
-          }
+        }
     </script>
 
 </body>

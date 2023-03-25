@@ -13,6 +13,29 @@ def decomposition(paragraph):
     return sentences, output_list
 
 
+import re
+def classification(form):
+    s_keys = []
+    key_list = []
+    point_list = []
+    
+    for k in form.keys():
+        s_keys.append(k)
+        
+    for s_k in s_keys:
+        value = form[s_k]
+        
+        md = re.sub('\n', '', value)
+        md = re.sub('\r', '', md)
+        
+        k_p = re.compile(f'(?<=\"KeyHighlight_{s_k}">)(.*?)(?=<\/span>)')
+        p_p = re.compile(f'(?<=\"PointHighlight_{s_k}">)(.*?)(?=<\/span>)')
+        
+        key_list = k_p.findall(md)
+        point_list = p_p.findall(md)
+        
+    return key_list, point_list
+
 # Load KoGPT Tokenizer
 # from transformers import AutoTokenizer
 

@@ -29,11 +29,13 @@ class Sent_data(db.Model):
     
     id = db.Column(db.Integer, primary_key=True)
     t_id = db.Column(db.Integer, db.ForeignKey('text_data.id'))
+    s_id = db.Column(db.Integer)
     sent = db.Column(db.Text)
-    k_w = db.relationship('Key_data', backref='sent_data')
-    p_w = db.relationship('Point_data', backref='sent_data')
+    # k_w = db.relationship('Key_data', backref='sent_data')
+    # p_w = db.relationship('Point_data', backref='sent_data')
     
-    def __init__(self, sent):
+    def __init__(self, s_id, sent):
+        self.s_id = s_id
         self.sent = sent
         
     def __repr__(self):
@@ -48,11 +50,12 @@ class Key_data(db.Model):
     __table_args__ = {'mysql_collate': 'utf8_general_ci'}
     
     id = db.Column(db.Integer, primary_key=True)
-    s_id = db.Column(db.Integer, db.ForeignKey('sent_data.id'))
+    s_id = db.Column(db.Integer) # s_id : sent_data와 단절
     key = db.Column(db.String(255))
     p_w = db.relationship('Point_data', backref='key_data')
     
-    def __init__(self, key):
+    def __init__(self, s_id, key):
+        self.s_id = s_id
         self.key = key
         
     def __repr__(self):
@@ -67,7 +70,6 @@ class Point_data(db.Model):
     __table_args__ = {'mysql_collate': 'utf8_general_ci'}
     
     id = db.Column(db.Integer, primary_key=True)
-    s_id = db.Column(db.Integer, db.ForeignKey('sent_data.id'))
     k_id = db.Column(db.Integer, db.ForeignKey('key_data.id'))
     point = db.Column(db.String(255))
     

@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <title>Highlight Text</title>
     <style>
-        .highlight-yellow { background-color: yellow; }
-        .highlight-green { background-color: lightgreen; }
+        [class^='KeyHighlight'] { background-color: yellow; }
+        [class^='PointHighlight'] { background-color: lightgreen; }
         
         input[type='checkbox'] { position: absolute; left: -3000% }
         input[type='checkbox'] + label { display : inline-block; background: #CCCCCC; border-radius: 30px;}
@@ -23,46 +23,35 @@
     <h3>지문을 입력해주세요.</h3>
     <form name='text_area' action="/decom" method="post">
         <p><textarea type="text" name="decomp" id="input" cols="50" rows="10"></textarea></p>
-        <p><input type="submit" value="분해" formaction="/decom"></p>
+        <p><input type="submit" value="분해"></p>
     </form>
     {{sent_list}}
     
-    <p>
-        <dev style="width:800px;">
-            {% for s in output_list %}
-                {% for s_k, s_v in s.items() %}
-                    <div>
-                        <!-- 
-                        form 태그에 id랑 name 지정해줘야하는데 태그별로 다르게 설정해줘야됨
-                        기본적으로 id 속성은 겹치면 안되는데 for문 돌리면서 해당 태그가 여러게 생성되니까
-                        id가 동일한게 여러개 생성되는것도 오류 사항. 
-                        -->
-                        <form id="frm" name="frm" action="/decom" method="post">
-                            {% for w_k, w_v in s_v.items() %}
-                                {{ w_v }}
-                            {% endfor %}
-                            <br>
-                            <button type="button" onclick="setHighlight('highlight-yellow')">Key</button>
-                            <button type="button" onclick="setHighlight('highlight-green')">Point</button>
-                            <button type="button" onclick="removeHighlight()">모두 제거</button>
-                            <button onclick="showHighlighted()">저장</button>
-                            <br>
-                            <!-- result-containe 랑 result도 다르게 설정해줘야됨 -->
-                            <div>
-                                <input id="result-container" name="s_k" value="" />
-                            </div>
-                            <div>
-                                <input id="result" name="highlight-yellow" value="" />
-                            </div>
-                            <!-- 아래 input 태그 두개도 id랑 name 다르게 설정 필요 -->
-                            <input type="hidden" id="yellowHighlightVal" name="key{{s_k}}" value="" />
-                            <input type="hidden" id="greenHighlightVal" name="point{{s_k}}" value="" />
-                        </form>
-                    </div>
-                {% endfor %}
-            {% endfor %} 
-        </dev>
-    </p>
+    <div style="width:800px;">
+        {% for s in output_list %}
+            {% for s_k, s_v in s.items() %}
+                <div>
+                    <form id="frm_{{s_k}}" name="frm_{{s_k}}" action="/decom" method="POST">
+                        {% for w_k, w_v in s_v.items() %}
+                            {{ w_v }}
+                        {% endfor %}
+                        
+                        <br>
+                        <button type="button" onclick="setHighlight('KeyHighlight_{{s_k}}')">Key</button>
+                        <button type="button" onclick="setHighlight('PointHighlight_{{s_k}}')">Point</button>
+                        <button type="button" onclick="removeHighlight({{s_k}})">모두 제거</button>
+                        <button onclick="showHighlighted({{s_k}})">저장</button>
+                        <br>
+                        <div id="result-container_{{s_k}}"></div>
+                        <div id="result"></div>
+                        
+                        <input type="hidden" id="yellowHighlightVal" name="key" value="" />
+                        <input type="hidden" id="greenHighlightVal" name="point" value="" />
+                    </form>
+                </div>
+            {% endfor %}
+        {% endfor %} 
+    </div>
 
     <script>
 
@@ -70,6 +59,7 @@
             var selection = window.getSelection().getRangeAt(0);
             var selectedText = selection.extractContents();
             var span = document.createElement('span');
+            
             span.className = className; // 
             span.appendChild(selectedText);
             selection.insertNode(span);
@@ -81,8 +71,9 @@
             }
         }
 
-        function removeHighlight() {
-            var highlighted = document.querySelectorAll('.highlight-yellow, .highlight-green');
+        function removeHighlight(s_k) {
+            var remove_check = '.KeyHighlight_' + s_k + ', ' + '.PointHighlight_' + s_k;
+            var highlighted = document.querySelectorAll(remove_check);
             for (var i = 0; i < highlighted.length; i++) {
                 var parent = highlighted[i].parentNode;
                 while (highlighted[i].firstChild) {
@@ -92,9 +83,9 @@
             }
         }
 
-        function showHighlighted() {
-            var yellowWords = document.querySelectorAll('.highlight-yellow');
-            var greenWords = document.querySelectorAll('.highlight-green');
+        function showHighlighted(s_k) {
+            var yellowWords = document.querySelectorAll('.KeyHighlight_'+s_k);
+            var greenWords = document.querySelectorAll('.PointHighlight_'+s_k);
             
             var yellowContainer = document.createElement('div');
             var greenContainer = document.createElement('div');
@@ -110,17 +101,15 @@
               greenContainer.appendChild(greenWords[i].cloneNode(true));
             }
             
-            var resultContainer = document.getElementById('result-container');
+            var resultContainer = document.getElementById('result-container_'+s_k);
             resultContainer.innerHTML = '선택한 단어 확인';
             resultContainer.appendChild(yellowContainer);
             resultContainer.appendChild(greenContainer);
             
-            // hidden으러 설정한 input 태그에 value 지정하는 부분
-            // 각 태그에 id 값 가져와서 수정 필요
             $("#yellowHighlightVal").val(yellowContainer);
             $("#greenHighlightVal").val(greenContainer);
             
-            var frm = document.frm; //form태그 name 지정한거로 변경 필요
+            var frm = document.frm_0; 
             frm.submit();
           }
     </script>
