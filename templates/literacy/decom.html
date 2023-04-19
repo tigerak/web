@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Highlight Text</title>
+    <style>
+        [class^='KeyHighlight'] { background-color: yellow; }
+        [class^='PointHighlight'] { background-color: lightgreen; }
+        
+        input[type='checkbox'] { position: absolute; left: -3000% }
+        input[type='checkbox'] + label { display : inline-block; background: #CCCCCC; border-radius: 30px;}
+        input[type='checkbox']:before + label {content: ''; }
+        input[type='checkbox']:checked + label {content: ''; background: #FFEB9B;}
+        
+    </style>
+</head>
+
+<body>
+    <div>
+        <button type="submit" name="to_home" onclick="window.location.href='/decom/{{user_id}}'">Go to Main Page</button>
+        <button type="submit" name="to_db_check" onclick="window.location.href='/db_check/{{user_id}}'">Check My Work</button>
+        <button type="submit" onclick="window.open('/api','ChatGPT','width=800,height=500,location=no,status=no,scrollbars=yes');">ChatGPT 사용</button>
+    </div>
+
+    <h3>{{user_id}}님 환영합니다.</h3>
+    <form name='text_area' action="/decom/{{user_id}}" method="post">
+        <p><textarea type="text" name="decomp" id="input" cols="100" rows="10" placeholder="지문을 입력하세요."></textarea></p>
+        <p><input type="submit" value="분해" accesskey="q"> (단축키 : Alt + q)</p>
+    </form>
+    
+    <div style="width:1200px;">
+        {% if sent_dict %}
+            {% for s_k, s_v in sent_dict.items() %}
+                <div style="border: 1px solid gold; float: left; width:64.5%;">
+                    <div>
+                        {{ s_k }}) {{ s_v }}
+                        <br>
+                        <button type="button" onclick="setHighlight('KeyHighlight_{{s_k}}')">단서</button>
+                        <button type="button" onclick="setHighlight('PointHighlight_{{s_k}}')">키워드</button>
+                        <button type="button" onclick="removeHighlight({{s_k}})">모두 제거</button>
+                        <button type="button" onclick="showHighlighted({{s_k}})">확인 필수!</button>
+                        
+                        <br>
+                        
+                        <form method="POST" action="/sentence/{{user_id}}" target="iframe_{{s_k}}">
+                            <div id="result-container_{{s_k}}"></div>
+                            <input type="hidden" name="{{t_id}}_{{s_k}}" id="{{s_k}}">
+                            <button type="submit" onclick="senddiv('{{s_k}}')">저장</button>
+                        </form>
+                        
+                    </div>
+                </div>
+                <div style="float: left; width:35%; height:150px">
+                    <iframe id="iframe" name="iframe_{{s_k}}" style="width: 420px; height: 150px; border:none;"></iframe>
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+    
+    <!-- style="display:none" -->
+
+    <script>
+        function senddiv(s_k) {
+            var divValue = document.getElementById('result-container_'+s_k).innerHTML;
+            document.getElementById(s_k).value = divValue;
+        }
+
+        function setHighlight(className) {
+            var selection = window.getSelection().getRangeAt(0);
+            var selectedText = selection.extractContents();
+            var span = document.createElement('span');
+            
+            span.className = className; // 
+            span.appendChild(selectedText);
+            selection.insertNode(span);
+
+            var highlightedWords = document.querySelectorAll("." + className);
+            var words = "";
+            for (var i = 0; i < highlightedWords.length; i++) {
+                words += highlightedWords[i].innerText + ", ";
+            }
+        }
+
+        function removeHighlight(s_k) {
+            var remove_check = '.KeyHighlight_' + s_k + ', ' + '.PointHighlight_' + s_k;
+            var highlighted = document.querySelectorAll(remove_check);
+            for (var i = 0; i < highlighted.length; i++) {
+                var parent = highlighted[i].parentNode;
+                while (highlighted[i].firstChild) {
+                    parent.insertBefore(highlighted[i].firstChild, highlighted[i]);
+                }
+                parent.removeChild(highlighted[i]);
+            }
+        }
+
+        function showHighlighted(s_k) {
+            var yellowWords = document.querySelectorAll('.KeyHighlight_'+s_k);
+            var greenWords = document.querySelectorAll('.PointHighlight_'+s_k);
+            
+            var yellowContainer = document.createElement('div');
+            var greenContainer = document.createElement('div');
+
+            yellowContainer.innerHTML = '<b>단서 : </b>';
+            greenContainer.innerHTML = '<b>키워드 : </b>';
+            
+            // 중복된 단어를 저장하지 않기 위해 Set 사용
+            var yellowWordsSet = new Set();
+            var greenWordsSet = new Set();
+
+            for (var i = 0; i < yellowWords.length; i++) {
+                yellowWordsSet.add(yellowWords[i].textContent);
+            }
+
+            for (var i = 0; i < greenWords.length; i++) {
+                greenWordsSet.add(greenWords[i].textContent);
+            }
+
+            // Set에서 중복 제거된 단어를 DOM에 추가
+            yellowWordsSet.forEach(function(word) {
+                var span = document.createElement('span');
+                span.textContent = word;
+                span.classList.add('KeyHighlight_'+s_k);
+                yellowContainer.appendChild(span);
+            });
+
+            greenWordsSet.forEach(function(word) {
+                var span = document.createElement('span');
+                span.textContent = word;
+                span.classList.add('PointHighlight_'+s_k);
+                greenContainer.appendChild(span);
+            });
+
+            var resultContainer = document.getElementById('result-container_'+s_k);
+            resultContainer.appendChild(yellowContainer);
+            resultContainer.appendChild(greenContainer);
+        }
+
+    </script>    
+</body>
+</html>

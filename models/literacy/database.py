@@ -1,4 +1,4 @@
-from make_web.extensions import db
+from extensions import db
 from datetime import datetime
 
 
@@ -16,7 +16,8 @@ class Text_data(db.Model):
         self.text = text
         
     def __repr__(self):
-        return f'{self.user_id} : {self.text[:20]}'
+        return f'{self.id}'
+        # return f'{self.user_id} : {self.text[:20]}'
     
     # QueryObject type -> Dictionary
     def as_dict(self):
@@ -39,7 +40,8 @@ class Sent_data(db.Model):
         self.sent = sent
         
     def __repr__(self):
-        return f'{self.sent}'
+        return f'{self.s_id}'
+        # return f'{self.sent}'
     
     def as_dict(self):
         return {x.name: getattr(self, x.name) for x in self.__table__.columns}
@@ -50,16 +52,20 @@ class Key_data(db.Model):
     __table_args__ = {'mysql_collate': 'utf8_general_ci'}
     
     id = db.Column(db.Integer, primary_key=True)
+    user_id = db.Column(db.String(64))
+    t_id = db.Column(db.Integer)
     s_id = db.Column(db.Integer) # s_id : sent_data와 단절
     key = db.Column(db.String(255))
     p_w = db.relationship('Point_data', backref='key_data')
     
-    def __init__(self, s_id, key):
+    def __init__(self, user_id, t_id, s_id, key):
+        self.user_id = user_id
+        self.t_id = t_id
         self.s_id = s_id
         self.key = key
         
     def __repr__(self):
-        return f'{self.key}'
+        return f'{self.id}'
     
     def as_dict(self):
         return {x.name: getattr(self, x.name) for x in self.__table__.columns}

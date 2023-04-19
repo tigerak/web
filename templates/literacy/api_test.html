@@ -7,20 +7,20 @@
     <title>Document</title>
 </head>
 <body>
-    <div>
+    <!-- <div>
         <button type="submit" name="to_home" onclick="window.location.href='/decom'">Go to Main Page</button>
         <button type="submit" name="to_db_test" onclick="window.location.href='/db_test'">Go to DB Test</button>
-    </div>
+    </div> -->
 
-    <h3>{{user_id}}님 질문과 지문을 입력해주세요.</h3>
-    <form action="/api/{{user_id}}" method="post">
+    <h3>한 문장씩 입력하면 더 좋은 결과를 보여줍니다.</h3>
+    <form action="/api" method="post">
         <p><input type="text", name="api_prompt", size="100", value="다음 글을 한 글자도 다르지 않게 써줘. 그리고 중요한 단어에는 별표를 해줘."></p>
         <p><textarea type="text", name="api_completion", cols="100" rows="10", placeholder="지문을 입력하세요."></textarea></p>
         <p><input type="submit" value="Send to ChatGPT" accesskey="q"> (단축키 : Alt + q)</p>
     </form>
     {{text}}
     
-    <table>
+    <!-- <table>
         {% for item in db_items %}
             <tr>
                 <td>{{ item.id }}</td>
@@ -30,6 +30,6 @@
                 <td>{{ item.completion }}</td>
             </tr>
         {% endfor %}
-        </table>
+        </table> -->
 </body>
 </html>

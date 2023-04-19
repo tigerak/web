@@ -1,4 +1,4 @@
-from make_web.main import kakao_bp
+from main import kakao_bp
 
 from flask import render_template, request, redirect, url_for
 

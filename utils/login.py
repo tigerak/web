@@ -1,5 +1,5 @@
-from make_web.models.literacy.database import User_only
-from make_web.extensions import db
+from models.literacy.database import User_only
+from extensions import db
 
 from flask import render_template, request, redirect
 
@@ -23,12 +23,15 @@ def sign(post_form):
                 return render_template('literacy/index.html', message=message, user_list=user_list)
             
             elif user_id in user_list['등록된 ID 목록']:
-                return redirect(f'/api/{user_id}')
+                return redirect(f'/decom/{user_id}')
             
         # Sign UP
         elif request.form['choice'] == 'Sign up':
             
-            if user_id not in user_list['등록된 ID 목록']:
+            if len(user_id) < 1:
+                message = '1글자 이상의 ID를 입력해주세요.'
+                
+            elif user_id not in user_list['등록된 ID 목록']:
                 send_api_data = User_only(user_id, 'prompt', 'completion')
                 db.session.add(send_api_data)
                 db.session.commit()
@@ -41,6 +44,7 @@ def sign(post_form):
                     
             elif user_id in user_list['등록된 ID 목록']:
                 message = '이미 등록된 ID입니다.'
+                
             return render_template('literacy/index.html', message=message, user_list=user_list)
         
         # Remove ID

@@ -3,8 +3,8 @@ import openai
 from sqlalchemy import desc
 
 from config import Openai_api
-from make_web.extensions import db
-from make_web.models.literacy.database import User_only
+from extensions import db
+from models.literacy.database import User_only
         
     
 class SendToChatGPT():
@@ -20,7 +20,7 @@ class SendToChatGPT():
     def make_data(self):
         # prompt = User_only.query.filter_by(user_id=user_id).with_entities(User_only.prompt).first()[0]
         # completion = User_only.query.filter_by(user_id=user_id).with_entities(User_only.completion).first()[0]
-         # data = {
+        # data = {
         #     "prompt" : content['prompt'],
         #     "completion" : content['completion']
         # }
@@ -45,13 +45,14 @@ class ChatGPT():
         params = prompt + completion
 
         messages = [
-                {"role": "user", "content": params}
+                {"role": "user", 
+                 "content": params}
         ]
 
         response = openai.ChatCompletion.create(
             model= self.model,
             messages=messages
         )
-        answer = response['choices'][0]['message']['content']
+        answer = response['choices'][0]['message']['content'] # 정보 많음
         
         return answer

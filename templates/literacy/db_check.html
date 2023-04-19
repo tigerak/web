@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <title>Document</title>
+</head>
+
+<body>
+    <div>
+        <button type="submit" name="to_home" onclick="window.location.href='/decom/{{user_id}}'">Go to Main Page</button>
+        <!-- <button type="submit" name="to_db_test" onclick="window.location.href='/sentence/{{user_id}}'">Check My Work</button> -->
+        <!-- <button type="submit" name="to_db_test" onclick="window.location.href='/db_test'">Go to DB Test</button> -->
+    </div>
+    
+    <div style="clear: both">
+        <form action="/db_check/{{user_id}}" method="post">
+            <p>
+                <input type="number", name="delNum">
+                <input type="submit" value="번 지문 삭제">
+                <input type="number", name="delKey">
+                <input type="submit" value="번 단서 삭제">
+            </p>
+            <b>{{ title }}</b><br>
+            <p>
+                <button type="submit" name="back" value="{{ p_t_num }}"><< 최근으로</button>
+                {{ total_text }}개의 작업 중 최근 {{ p_t_num }}번째 지문.
+                <button type="submit" name="next" value="{{ p_t_num }}">이전으로 >></button>
+                <input type="number", name="moveNum">
+                <input type="submit" value="번째 지문으로 이동">
+            </p>
+            현재 지문 ID : {{ p_t_id }} ('지문 삭제' 할 때 쓰는 번호 !)
+        </form>
+    </div>
+
+    {% for s_item in S_items %}
+        <div style="width:1200px;">
+            <div style="border: 1px solid rgba(0, 255, 26, 0.688); position: relative; left: 0px; width: 600px;">
+                <table>
+                    <tr>
+                        <td>{{ s_item.s_id }}</td>
+                        <td>{{ s_item.sent }}</td>
+                    </tr>
+                </table>
+            </div>
+            {% for k_item in K_items %}
+                {% if k_item.s_id == s_item.s_id %}
+                    <div style="border: 1px solid blue; position: relative; left: 600px; top: 0px; width: 300px;">
+                        <table>    
+                            <tr>
+                                <td>{{ k_item.id }}</td>
+                                <td>{{ k_item.key }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    {% for p_item in P_items %}
+                        {% if p_item.k_id == k_item.id %}
+                            <div style="border: 1px solid rgba(255, 0, 89, 0.491); position: relative; left: 900px; width: 300px;">
+                                <table>
+                                    <tr>
+                                        <td>{{ p_item.id }}</td>
+                                        <td>{{ p_item.point }}</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+        </div>
+    {% endfor %}
+</body>
+</html>
