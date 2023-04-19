@@ -16,3 +16,6 @@ Dockerfile
 *.conf
 *.sh
 *.yml
+
+# Html
+test.html

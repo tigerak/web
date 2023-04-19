@@ -1,39 +1,35 @@
 ```
-literacy    
-    +--make_web
+literacy
+    +--main
         +--__init__.py
-        +--extensions.py
-        +--main
+        +--kakao
+            +--routes.py
+        +--literacy
+            +--routes.py    
+    +--models
+        +--__init__.py
+        +--literacy
+            +--database.py
+    +--templates
+        +--kakao
+            +--index.html
+        +--literacy
+            +--api_test.html
+            +--db_check.html
+            +--decom.html
+            +--index.html
+            +--sub_db.html
+    +--utils
+        +--__init__.py
+        +--login.py
+        +--kakao
             +--__init__.py
-            +--kakao
-                +--routes.py
-            +--literacy
-                +--routes.py    
-        +--models
+            +--bert_utile.py
+        +--literacy
             +--__init__.py
-            +--literacy
-                +--database.py
-        +--templates
-            +--kakao
-                +--index.html
-            +--literacy
-                +--index.html   
-                +--api_test.html
-                +--decom.html
-                +--db_test.html
-        +--utils
-            +--__init__.py
-            +--login.py
-            +--kakao
-                +--__init__.py
-                +--bert_utile.py
-            +--literacy
-                +--__init__.py
-                +--kogpt.py
-                +--chatgpt.py
-    +--run.py    
+            +--chatgpt.py
+            +--decom_util.py
+    +--extensions.py
     +--requirements.txt
+    +--run.py
 ```
-수정하실 HTML : make_web -> templates -> literacy -> decom.html<br>
-참고하실 DB : make_web -> models -> literacy -> database.py<br>
-라우터 : make_web -> main -> literacy -> routes.py -> @bp.route('/decom')
